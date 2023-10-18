@@ -4,36 +4,30 @@
 int main()
 {
 	//----------------------INITIALIZE----------------------------
-	sf::ContextSettings setting;
-	setting.antialiasingLevel = 10; //set anti-aliasing
-	sf::RenderWindow window(sf::VideoMode(800, 800), "RPG Game",sf::Style::Default,setting);
-	sf::CircleShape shape(50.f);
-	sf::RectangleShape rec1(sf::Vector2f(100, 100));
-	sf::CircleShape polygon(50, 5);
-
-	// shape properties
-	shape.setFillColor(sf::Color::Green);
-	shape.setPosition(sf::Vector2f(200, 400));
-	shape.setOutlineThickness(5.0f);
-	shape.setOutlineColor(sf::Color::Red);
-	shape.setOrigin(shape.getRadius(), shape.getRadius());
-
-	//rec1 properties
-	rec1.setPosition(sf::Vector2f(400, 400));
-	rec1.setFillColor(sf::Color::Blue);
-	rec1.setOutlineColor(sf::Color::Yellow);
-	rec1.setOutlineThickness(5.0f);
-//	rec1.setRotation(45);
-	rec1.setOrigin(rec1.getSize() / 2.0f);
-
-	//Polygon properties
-	polygon.setPosition(600, 400);
-	polygon.setFillColor(sf::Color::White);
-	polygon.setOrigin(polygon.getRadius(), polygon.getRadius());
-	polygon.setOutlineThickness(5.0f);
-	polygon.setOutlineColor(sf::Color::Green);
-
+	sf::RenderWindow window(sf::VideoMode(800, 800), "RPG Game",sf::Style::Default);
 	//----------------------INITIALIZE----------------------------
+	
+	//----------------------LOAD----------------------------
+	sf::Texture playTexture;
+	sf::Sprite playSprite;
+
+	if (playTexture.loadFromFile("Assets/Texture/spritesheet.png"))
+	{
+		playSprite.setTexture(playTexture);
+
+		int yIndex = 0;
+		int xIndex = 0;
+
+		playSprite.setTextureRect(sf::IntRect(xIndex * 64, yIndex * 64,64,64));
+		playSprite.setScale(sf::Vector2f(3, 3));
+		
+		std::cout << "Texture is loaded" << std::endl;
+	}
+	else
+	{
+		std::cout << "Texture is not loaded" << std::endl;
+	}
+	//----------------------LOAD----------------------------
 	//----------------------UPDATE----------------------------
 	while (window.isOpen())
 	{
@@ -46,11 +40,21 @@ int main()
 		}
 	//----------------------UPDATE----------------------------
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			playSprite.move(sf::Vector2f(0.1, 0.f));
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			playSprite.move(sf::Vector2f(0.f, 0.1));
+		
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			playSprite.move(sf::Vector2f(0.f, -0.1));
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			playSprite.move(sf::Vector2f(-0.1, 0.f));
+		
 	//----------------------DRAW----------------------------
 		window.clear(sf::Color::Black);
-		window.draw(shape);
-		window.draw(rec1);
-		window.draw(polygon);
+		window.draw(playSprite);
 		window.display();
 	//----------------------DRAW----------------------------
 	}

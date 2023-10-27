@@ -9,27 +9,33 @@ int main()
 {
 	//----------------------INITIALIZE----------------------------
 
-	sf::RenderWindow window(sf::VideoMode(1920, 1080), "RPG Game", sf::Style::Close);
-	//sf::RectangleShape bullets(sf::Vector2f(50, 25));
-
+	sf::RenderWindow window(sf::VideoMode(800, 900), "RPG Game", sf::Style::Close);
+	window.setFramerateLimit(60);
 	//----------------------INITIALIZE----------------------------
+	
+	
+	Player player;
+	player.Initialize();
+	player.Load();
+	
+	//----------------------Player----------------------------
 
 	//----------------------Skeleton----------------------------
 	Skeleton skeleton;
+	skeleton.Initialize();
 	skeleton.Load();
+	
 	//----------------------Player----------------------------
-	Player player;
-	player.Load();
-	//----------------------Player----------------------------
-
-
 
 
 
 	//----------------------UPDATE----------------------------
-
+	sf::Clock clock;
 	while (window.isOpen())
 	{
+		sf::Time deltaTimeTimer = clock.restart();
+		float deltaTime = deltaTimeTimer.asMilliseconds();
+		std::cout << deltaTime << std::endl;
 
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -38,9 +44,10 @@ int main()
 				window.close();
 
 		}
-
+		
 	//----------------------UPDATE----------------------------
-		player.Update(skeleton);
+		player.Update(deltaTime, skeleton);
+		skeleton.Update(deltaTime);
 	
 
 

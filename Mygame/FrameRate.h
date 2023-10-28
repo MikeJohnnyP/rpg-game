@@ -1,17 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-class Skeleton
+
+class FrameRate
 {
 private:
-	sf::Texture texture;
-	sf::RectangleShape boundingRectangle;
-	sf::Vector2i size;
-public:
-	sf::Sprite sprite;
+	sf::Text frameText;
+	sf::Font fonts;
+	float timer;
 
 public:
-	Skeleton();
-	~Skeleton();
+
+	FrameRate();
+	~FrameRate();
 	void Initialize();
 	void Load();
 	void Update(float deltaTime);

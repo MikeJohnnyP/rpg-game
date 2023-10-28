@@ -1,6 +1,16 @@
 #include "Player.h"
 #include <iostream>
 
+Player::Player() : 
+	bulletSpeed(0.5f),
+	playerSpeed(2.0f)
+{
+}
+
+Player::~Player()
+{
+}
+
 void Player::Initialize()
 {
 	size = sf::Vector2i(64, 64);

@@ -1,6 +1,14 @@
 #include "Skeleton.h"
 #include <iostream>
 
+Skeleton::Skeleton()
+{
+}
+
+Skeleton::~Skeleton()
+{
+}
+
 void Skeleton::Initialize()
 {
 	size = sf::Vector2i(64, 64);

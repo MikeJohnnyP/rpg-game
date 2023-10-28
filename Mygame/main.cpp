@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <math.h>
+#include "FrameRate.h"
 #include "Player.h"
 #include "Skeleton.h"
 
@@ -10,7 +11,8 @@ int main()
 	//----------------------INITIALIZE----------------------------
 
 	sf::RenderWindow window(sf::VideoMode(800, 900), "RPG Game", sf::Style::Close);
-	window.setFramerateLimit(60);
+	window.setFramerateLimit(360);
+	
 	//----------------------INITIALIZE----------------------------
 	
 	
@@ -26,16 +28,21 @@ int main()
 	skeleton.Load();
 	
 	//----------------------Player----------------------------
-
-
+	//----------------------FrameRate----------------------------
+	FrameRate frameRate;
+	frameRate.Initialize();
+	frameRate.Load();
+	//----------------------FrameRate----------------------------
 
 	//----------------------UPDATE----------------------------
 	sf::Clock clock;
+	sf::Time deltaTimeTimer;
+	double deltaTime = 0;
 	while (window.isOpen())
 	{
-		sf::Time deltaTimeTimer = clock.restart();
-		float deltaTime = deltaTimeTimer.asMilliseconds();
-		std::cout << deltaTime << std::endl;
+		clock.restart();
+		double deltaTime = deltaTimeTimer.asMicroseconds()/1000.0;
+		
 
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -48,7 +55,7 @@ int main()
 	//----------------------UPDATE----------------------------
 		player.Update(deltaTime, skeleton);
 		skeleton.Update(deltaTime);
-	
+		frameRate.Update(deltaTime);
 
 
 	//--------------------DRAW----------------------------
@@ -56,7 +63,9 @@ int main()
 		window.clear(sf::Color::Black);
 		player.Draw(window);
 		skeleton.Draw(window);
+		frameRate.Draw(window);
 		window.display();
+		deltaTimeTimer = clock.getElapsedTime();
 }
 
 	//----------------------DRAW----------------------------

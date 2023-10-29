@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include <math.h>
+#include "Map.h"
 #include "FrameRate.h"
 #include "Player.h"
 #include "Skeleton.h"
@@ -8,31 +8,34 @@
 
 int main()
 {
-	//----------------------INITIALIZE----------------------------
-
-	sf::RenderWindow window(sf::VideoMode(1280,1000 ), "RPG Game", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(1280, 1000), "RPG Game", sf::Style::Default);
 	//window.setFramerateLimit(60);
+
+	Player player;
+	Skeleton skeleton;
+	FrameRate frameRate;
+	Map map;
 	
 	//----------------------INITIALIZE----------------------------
 	
-	
-	Player player;
 	player.Initialize();
-	player.Load();
-	
-	//----------------------Player----------------------------
-
-	//----------------------Skeleton----------------------------
-	Skeleton skeleton;
 	skeleton.Initialize();
-	skeleton.Load();
-	
-	//----------------------Player----------------------------
-	//----------------------FrameRate----------------------------
-	FrameRate frameRate;
 	frameRate.Initialize();
+	map.Initialize();
+	
+	//----------------------INITIALIZE----------------------------
+
+	//----------------------LOAD----------------------------
+	
+	player.Load();
+	skeleton.Load();
 	frameRate.Load();
-	//----------------------FrameRate----------------------------
+	map.Load();
+
+	//----------------------LOAD----------------------------
+	
+	
+
 
 	//----------------------UPDATE----------------------------
 	sf::Clock clock;
@@ -53,6 +56,7 @@ int main()
 		}
 		sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
 	//----------------------UPDATE----------------------------
+		map.Update(deltaTime);
 		player.Update(deltaTime, skeleton, mousePosition);
 		skeleton.Update(deltaTime);
 		frameRate.Update(deltaTime);
@@ -61,6 +65,7 @@ int main()
 	//--------------------DRAW----------------------------
 
 		window.clear(sf::Color::Black);
+		map.Draw(window);
 		player.Draw(window);
 		skeleton.Draw(window);
 		frameRate.Draw(window);

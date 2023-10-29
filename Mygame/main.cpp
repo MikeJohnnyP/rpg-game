@@ -10,8 +10,8 @@ int main()
 {
 	//----------------------INITIALIZE----------------------------
 
-	sf::RenderWindow window(sf::VideoMode(800, 900), "RPG Game", sf::Style::Close);
-	window.setFramerateLimit(360);
+	sf::RenderWindow window(sf::VideoMode(1280,1000 ), "RPG Game", sf::Style::Default);
+	//window.setFramerateLimit(60);
 	
 	//----------------------INITIALIZE----------------------------
 	
@@ -51,9 +51,9 @@ int main()
 				window.close();
 
 		}
-		
+		sf::Vector2f mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
 	//----------------------UPDATE----------------------------
-		player.Update(deltaTime, skeleton);
+		player.Update(deltaTime, skeleton, mousePosition);
 		skeleton.Update(deltaTime);
 		frameRate.Update(deltaTime);
 

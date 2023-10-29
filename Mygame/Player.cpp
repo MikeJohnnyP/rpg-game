@@ -1,9 +1,10 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player() : 
-	bulletSpeed(0.5f),
-	playerSpeed(2.0f)
+Player::Player() :
+	playerSpeed(2.0f),
+	fireRateTimer(0),
+	maxFireRate(150)
 {
 }
 
@@ -27,7 +28,7 @@ void Player::Load()
 	{
 		sprite.setTexture(texture);
 
-		int yIndex = 0;
+		int yIndex = 3;
 		int xIndex = 0;
 		
 		
@@ -44,7 +45,7 @@ void Player::Load()
 
 }
 
-void Player::Update(float deltaTime, Skeleton& skeleton)
+void Player::Update(float deltaTime, Skeleton& skeleton, sf::Vector2f& mousePosition)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		sprite.move(sf::Vector2f(1, 0.f) * playerSpeed * deltaTime);
@@ -57,26 +58,39 @@ void Player::Update(float deltaTime, Skeleton& skeleton)
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		sprite.move(sf::Vector2f(-1, 0.f) * playerSpeed * deltaTime);
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//--------------------------- Bullets ---------------------------------------	
+	fireRateTimer += deltaTime;
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)&& fireRateTimer>= maxFireRate)
 	{
-		bullets.push_back(sf::RectangleShape(sf::Vector2f(50, 25)));
+		
+		bullets.push_back(Bullet());
 		int i = bullets.size() - 1;
-		bullets[i].setPosition(sprite.getPosition());
+		bullets[i].Initialize(sprite.getPosition(), mousePosition, 10.0f);
+		fireRateTimer = 0;
 	}
-
+	
 	for (size_t i = 0; i < bullets.size(); i++)
 	{
-		sf::Vector2f direction = skeleton.sprite.getPosition() - bullets[i].getPosition();
-		direction = Math::nomalizedVector(direction);
-		bullets[i].setPosition(bullets[i].getPosition() + direction * bulletSpeed * deltaTime);
+		bullets[i].Update(deltaTime);
+		//sf::Vector2f direction = mousePosition - bullets[i].getPosition();
+		//direction = Math::nomalizedVector(direction);
+		//bullets[i].setPosition(bullets[i].getPosition() + direction * bulletSpeed * deltaTime);
+		//std::cout << i << std::endl;
+		
+		if (skeleton.health >= 0) {
+			if (Math::didCollision(bullets[i].getFloatRect(), skeleton.sprite.getGlobalBounds())) {
+				bullets.erase(bullets.begin() + i);
+				skeleton.changeHp(-10);
+				std::cout << "COLLISION" << std::endl;
+
+			}
+		}
 	}
-	
+	//--------------------------- Bullets ---------------------------------------	
+
 	boundingRectangle.setPosition(sprite.getPosition());
 	
-	if (Math::didCollision(sprite.getGlobalBounds(),skeleton.sprite.getGlobalBounds())){
-		std::cout << "COLLISION" << std::endl;
-	}
+	
 }
 
 void Player::Draw(sf::RenderWindow & window)
@@ -85,7 +99,7 @@ void Player::Draw(sf::RenderWindow & window)
 		window.draw(boundingRectangle);
 		for (size_t i = 0; i < bullets.size(); i++)
 		{
-			window.draw(bullets[i]);
+			bullets[i].Draw(window);
 		}
 
 	}
